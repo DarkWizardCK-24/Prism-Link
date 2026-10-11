@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LuAtSign, LuKeyRound, LuLogOut, LuMail } from "react-icons/lu";
 import { authErrorMessage, useAuth } from "@/context/AuthContext";
@@ -8,10 +8,16 @@ import { changeUsername } from "@/lib/db";
 import type { Profile } from "@/lib/types";
 import Button from "../ui/Button";
 
-export default function SettingsPanel({ profile }: { profile: Profile }) {
+export default function SettingsPanel({ profile, onUsernameDraft }: { profile: Profile; onUsernameDraft: (name: string | null) => void }) {
   const { user, logout, resetPassword } = useAuth();
   const [name, setName] = useState(profile.username);
   const [busy, setBusy] = useState(false);
+
+  // Show the typed username in the live preview before it is saved.
+  useEffect(() => {
+    onUsernameDraft(name !== profile.username && name.length >= 3 ? name : null);
+    return () => onUsernameDraft(null);
+  }, [name, profile.username, onUsernameDraft]);
 
   async function saveUsername() {
     setBusy(true);

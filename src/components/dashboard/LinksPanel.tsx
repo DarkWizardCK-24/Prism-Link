@@ -43,7 +43,7 @@ import { parseEmbed } from "@/lib/embeds";
 import { getPlatform } from "@/lib/platforms";
 import { linkCss, THEMES } from "@/lib/themes";
 import { shortDate } from "@/lib/time";
-import type { ItemKind, LinkItem } from "@/lib/types";
+import { LINK_DEFAULTS, type ItemKind, type LinkItem } from "@/lib/types";
 import { cn, normalizeUrl } from "@/lib/utils";
 import Button from "../ui/Button";
 import ItemForm, { EMPTY_FIELDS, validateFields, type Fields } from "./ItemForm";
@@ -106,6 +106,22 @@ function fieldsOf(l: LinkItem): Fields {
   return { title: l.title, url: l.url, iconType: l.iconType, emoji: l.emoji, thumbnail: l.thumbnail, startAt: l.startAt, endAt: l.endAt, collapsible: l.collapsible, gradFrom: l.gradFrom, gradTo: l.gradTo };
 }
 
+/** The unsaved form values as link fields, so the live preview can show them while you type. */
+function draftOf(kind: ItemKind, f: Fields): Partial<LinkItem> {
+  return {
+    title: f.title,
+    url: kind === "link" ? normalizeUrl(f.url) || f.url : f.url,
+    iconType: f.iconType,
+    emoji: f.emoji,
+    thumbnail: f.thumbnail,
+    startAt: f.startAt,
+    endAt: f.endAt,
+    collapsible: f.collapsible,
+    gradFrom: f.gradFrom,
+    gradTo: f.gradTo,
+  };
+}
+
 /** Icon tile + title shown for an item, shared by the list card and the drag overlay. */
 function describe(link: LinkItem, childCount = 0) {
   const { Icon, name } = getPlatform(link.url);
@@ -154,6 +170,7 @@ function ItemCard({
   body,
   onAddChild,
   onDelete,
+  onDraft,
 }: {
   link: LinkItem;
   uid: string;
@@ -162,6 +179,8 @@ function ItemCard({
   body?: ReactNode;
   onAddChild?: () => void;
   onDelete: () => Promise<void>;
+  /** Reports the unsaved edit to the live preview (null when the editor closes). */
+  onDraft: (id: string, patch: Partial<LinkItem> | null) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: link.id });
   const [editing, setEditing] = useState(false);
@@ -175,6 +194,13 @@ function ItemCard({
   const { tile, title, sub, tileStyle } = describe(link, childCount);
   const scheduled = !!link.startAt && now < link.startAt;
   const expired = !!link.endAt && now >= link.endAt;
+
+  // Show the edit in the live preview as you type, before it is saved.
+  useEffect(() => {
+    if (!editing) return;
+    onDraft(link.id, draftOf(kind, fields));
+    return () => onDraft(link.id, null);
+  }, [editing, fields, link.id, kind, onDraft]);
 
   async function save() {
     const err = validateFields(kind, fields);
@@ -349,7 +375,18 @@ function OverlayCard({ link, childCount }: { link: LinkItem; childCount: number 
   );
 }
 
-export default function LinksPanel({ uid, links }: { uid: string; links: LinkItem[] }) {
+export default function LinksPanel({
+  uid,
+  links,
+  onLinkDraft,
+  onNewDraft,
+}: {
+  uid: string;
+  links: LinkItem[];
+  onLinkDraft: (id: string, patch: Partial<LinkItem> | null) => void;
+  /** The item being created (or null), so the preview can show it while the form is open. */
+  onNewDraft: (item: LinkItem | null) => void;
+}) {
   const [form, setForm] = useState<{ kind: ItemKind; groupId: string | null } | null>(null);
   const [fields, setFields] = useState<Fields>(EMPTY_FIELDS);
   const [busy, setBusy] = useState(false);
@@ -366,6 +403,28 @@ export default function LinksPanel({ uid, links }: { uid: string; links: LinkIte
   useEffect(() => {
     if (form) formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [form]);
+
+  // Show the item being created in the live preview.
+  useEffect(() => {
+    if (!form || (!fields.title.trim() && !fields.url.trim())) {
+      onNewDraft(null);
+      return;
+    }
+    onNewDraft({
+      ...LINK_DEFAULTS,
+      title: "",
+      url: "",
+      ...draftOf(form.kind, fields),
+      id: "__new__",
+      kind: form.kind,
+      groupId: form.groupId,
+      active: true,
+      order: -1e9, // top of its container, like a real new item
+      clicks: 0,
+      createdAt: 0,
+    });
+    return () => onNewDraft(null);
+  }, [form, fields, onNewDraft]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -584,7 +643,7 @@ export default function LinksPanel({ uid, links }: { uid: string; links: LinkIte
                 {tree[ROOT].map((id) => {
                   const link = byId.get(id);
                   if (!link) return null;
-                  if (link.kind !== "group") return <ItemCard key={id} link={link} uid={uid} now={now} onDelete={() => remove(link)} />;
+                  if (link.kind !== "group") return <ItemCard key={id} link={link} uid={uid} now={now} onDelete={() => remove(link)} onDraft={onLinkDraft} />;
                   const kidIds = tree[`c:${id}`] ?? [];
                   return (
                     <ItemCard
@@ -595,11 +654,12 @@ export default function LinksPanel({ uid, links }: { uid: string; links: LinkIte
                       childCount={kidIds.length}
                       onAddChild={() => startAdd("link", id)}
                       onDelete={() => remove(link)}
+                      onDraft={onLinkDraft}
                       body={
                         <GroupBody groupId={id} ids={kidIds}>
                           {kidIds.map((kid) => {
                             const child = byId.get(kid);
-                            return child ? <ItemCard key={kid} link={child} uid={uid} now={now} onDelete={() => remove(child)} /> : null;
+                            return child ? <ItemCard key={kid} link={child} uid={uid} now={now} onDelete={() => remove(child)} onDraft={onLinkDraft} /> : null;
                           })}
                         </GroupBody>
                       }

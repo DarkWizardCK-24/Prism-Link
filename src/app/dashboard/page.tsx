@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { LuChartColumn, LuEye, LuLink, LuLoaderCircle, LuLogOut, LuPalette, LuSettings, LuX } from "react-icons/lu";
 import type { IconType } from "react-icons";
@@ -47,6 +47,20 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<Tab>("links");
   const [previewOpen, setPreviewOpen] = useState(false);
+  // Unsaved edits that the live preview shows straight away.
+  const [linkDrafts, setLinkDrafts] = useState<Record<string, Partial<LinkItem>>>({});
+  const [newItem, setNewItem] = useState<LinkItem | null>(null);
+  const [usernameDraft, setUsernameDraft] = useState<string | null>(null);
+
+  const onLinkDraft = useCallback((id: string, patch: Partial<LinkItem> | null) => {
+    setLinkDrafts((d) => {
+      if (patch) return { ...d, [id]: patch };
+      if (!(id in d)) return d;
+      const next = { ...d };
+      delete next[id];
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!loading && !user) router.replace("/login");
@@ -63,6 +77,11 @@ export default function DashboardPage() {
   }, [user]);
 
   const merged = useMemo(() => (profile ? { ...profile, ...draft } : null), [profile, draft]);
+  const previewProfile = useMemo(() => (merged && usernameDraft ? { ...merged, username: usernameDraft } : merged), [merged, usernameDraft]);
+  const previewLinks = useMemo(() => {
+    const edited = links.map((l) => (linkDrafts[l.id] ? { ...l, ...linkDrafts[l.id] } : l));
+    return newItem ? [...edited, newItem] : edited;
+  }, [links, linkDrafts, newItem]);
   const dirty = Object.keys(draft).length > 0;
 
   async function save() {
@@ -139,7 +158,7 @@ export default function DashboardPage() {
 
           <AnimatePresence mode="wait">
             <motion.div key={tab} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-              {tab === "links" && <LinksPanel uid={user.uid} links={links} />}
+              {tab === "links" && <LinksPanel uid={user.uid} links={links} onLinkDraft={onLinkDraft} onNewDraft={setNewItem} />}
               {tab === "appearance" && (
                 <AppearancePanel
                   value={merged}
@@ -151,7 +170,7 @@ export default function DashboardPage() {
                 />
               )}
               {tab === "analytics" && <AnalyticsPanel profile={profile} links={links} />}
-              {tab === "settings" && <SettingsPanel profile={profile} />}
+              {tab === "settings" && <SettingsPanel profile={profile} onUsernameDraft={setUsernameDraft} />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -160,7 +179,7 @@ export default function DashboardPage() {
       {/* Desktop live preview */}
       <aside className="sticky top-0 hidden h-dvh flex-col items-center justify-center border-l border-white/60 bg-white/30 p-6 lg:flex">
         <p className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-400">Live preview</p>
-        <PhonePreview profile={merged} links={links} />
+        <PhonePreview profile={previewProfile ?? merged} links={previewLinks} />
       </aside>
 
       {/* Mobile bottom tab bar */}
@@ -180,7 +199,7 @@ export default function DashboardPage() {
       <AnimatePresence>
         {previewOpen && (
           <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", stiffness: 300, damping: 34 }} className="fixed inset-0 z-50 overflow-y-auto lg:hidden">
-            <ProfileView profile={merged} links={links} preview className="min-h-dvh" />
+            <ProfileView profile={previewProfile ?? merged} links={previewLinks} preview className="min-h-dvh" />
             <button onClick={() => setPreviewOpen(false)} className="fixed right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur" aria-label="Close preview">
               <LuX className="h-5 w-5" />
             </button>
