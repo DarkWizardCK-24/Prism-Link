@@ -12,6 +12,7 @@ import { uploadImage } from "@/lib/upload";
 import { avatarFor, cn, normalizeUrl } from "@/lib/utils";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
+import GradientPicker from "../ui/GradientPicker";
 
 export type Draft = ProfileEdit;
 
@@ -263,6 +264,10 @@ export default function AppearancePanel({
             </label>
           </div>
         )}
+      </Section>
+
+      <Section title="Link card colour" hint="A default gradient for every link card. Groups and individual links can override it.">
+        <GradientPicker label="All link cards" from={value.cardFrom} to={value.cardTo} onChange={(cardFrom, cardTo) => onChange({ cardFrom, cardTo })} />
       </Section>
 
       <Section title="Buttons">

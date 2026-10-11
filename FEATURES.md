@@ -1,6 +1,6 @@
 # PrismLink – feature ideas to make it better
 
-**Shipped:** email/password auth, link CRUD, drag-and-drop reorder, show/hide toggle, 8 gradient themes, button styles/shapes, live phone preview, views/clicks analytics, QR code, username change, mobile app-style UI.
+**Shipped:** link groups with drag between groups, per-link / per-group / profile-wide card gradients, social icon row, avatar and background uploads, emoji and image icons, scheduled links, embeds, daily analytics, email/password auth, link CRUD, drag-and-drop reorder, show/hide toggle, 8 gradient themes, button styles/shapes, live phone preview, views/clicks analytics, QR code, username change, mobile app-style UI.
 
 **Next up (high impact)**
 1. Social icon row under the bio (Instagram, X, YouTube…) separate from link buttons

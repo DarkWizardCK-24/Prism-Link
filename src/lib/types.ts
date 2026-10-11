@@ -1,7 +1,7 @@
 export type ButtonStyle = "solid" | "glass" | "outline";
 export type ButtonShape = "pill" | "rounded" | "square";
 export type BgType = "theme" | "color" | "gradient" | "image";
-export type ItemKind = "link" | "header" | "divider" | "embed";
+export type ItemKind = "link" | "group" | "header" | "divider" | "embed";
 export type IconKind = "auto" | "emoji" | "image";
 
 export interface SocialLink {
@@ -24,6 +24,8 @@ export interface Profile {
   bgColor2: string;
   bgImage: string;
   bgOverlay: number;
+  cardFrom: string;
+  cardTo: string;
   views: number;
   createdAt: number;
 }
@@ -43,6 +45,11 @@ export interface LinkItem {
   startAt: number | null;
   endAt: number | null;
   collapsible: boolean;
+  /** Id of the parent group, or null for top-level items. */
+  groupId: string | null;
+  /** Optional custom card gradient (hex). Empty = inherit from group / profile / theme. */
+  gradFrom: string;
+  gradTo: string;
 }
 
 export interface AnalyticsEvent {
@@ -62,6 +69,8 @@ export const PROFILE_DEFAULTS = {
   bgColor2: "#7c3aed",
   bgImage: "",
   bgOverlay: 30,
+  cardFrom: "",
+  cardTo: "",
 };
 
 export const LINK_DEFAULTS = {
@@ -72,6 +81,9 @@ export const LINK_DEFAULTS = {
   startAt: null as number | null,
   endAt: null as number | null,
   collapsible: false,
+  groupId: null as string | null,
+  gradFrom: "",
+  gradTo: "",
 };
 
 /** A link is visible when active and inside its optional schedule window. */

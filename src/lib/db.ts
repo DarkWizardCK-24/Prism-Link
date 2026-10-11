@@ -100,6 +100,8 @@ export type ProfileEdit = Partial<
     | "bgColor2"
     | "bgImage"
     | "bgOverlay"
+    | "cardFrom"
+    | "cardTo"
   >
 >;
 
@@ -129,7 +131,7 @@ export function subscribeLinks(uid: string, cb: (l: LinkItem[]) => void): Unsubs
 }
 
 export type NewItem = Partial<
-  Pick<LinkItem, "kind" | "title" | "url" | "iconType" | "emoji" | "thumbnail" | "startAt" | "endAt" | "collapsible">
+  Pick<LinkItem, "kind" | "title" | "url" | "iconType" | "emoji" | "thumbnail" | "startAt" | "endAt" | "collapsible" | "groupId" | "gradFrom" | "gradTo">
 >;
 
 export async function addLink(uid: string, data: NewItem, topOrder: number) {
@@ -147,7 +149,7 @@ export async function addLink(uid: string, data: NewItem, topOrder: number) {
 }
 
 export type LinkEdit = Partial<
-  Pick<LinkItem, "title" | "url" | "active" | "iconType" | "emoji" | "thumbnail" | "startAt" | "endAt" | "collapsible">
+  Pick<LinkItem, "title" | "url" | "active" | "iconType" | "emoji" | "thumbnail" | "startAt" | "endAt" | "collapsible" | "gradFrom" | "gradTo">
 >;
 
 export async function updateLink(uid: string, id: string, data: LinkEdit) {
@@ -158,9 +160,18 @@ export async function deleteLink(uid: string, id: string) {
   await deleteDoc(doc(db, "users", uid, "links", id));
 }
 
-export async function reorderLinks(uid: string, orderedIds: string[]) {
+/** Persists a drag-and-drop result: new order and parent group for every item that moved. */
+export async function moveItems(uid: string, updates: Array<{ id: string; order: number; groupId: string | null }>) {
   const batch = writeBatch(db);
-  orderedIds.forEach((id, i) => batch.update(doc(db, "users", uid, "links", id), { order: i }));
+  updates.forEach((u) => batch.update(doc(db, "users", uid, "links", u.id), { order: u.order, groupId: u.groupId }));
+  await batch.commit();
+}
+
+/** Deletes a group but keeps its links, which return to the top level where the group used to be. */
+export async function deleteGroup(uid: string, group: LinkItem, children: LinkItem[]) {
+  const batch = writeBatch(db);
+  children.forEach((c, i) => batch.update(doc(db, "users", uid, "links", c.id), { groupId: null, order: group.order + (i + 1) / 1000 }));
+  batch.delete(doc(db, "users", uid, "links", group.id));
   await batch.commit();
 }
 

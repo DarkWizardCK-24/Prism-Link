@@ -78,13 +78,14 @@ The interface adapts to the device. On a phone it feels like a native app, with 
 
 - **Email & password authentication** — sign up, log in and reset your password.
 - **Unique usernames** — claim your own page and change the name later.
-- **Links, headers, dividers and embeds** — build your page from four kinds of blocks.
-- **Drag & drop ordering** — reorder anything with a flick, on mouse or touch.
+- **Links, groups, headings, dividers and embeds** — build your page from five kinds of blocks.
+- **Link groups** — put related links into a named group that shows as a framed panel on your page; groups can be collapsible so visitors can fold them open and closed.
+- **Drag & drop** — reorder anything with a flick, on mouse or touch. Drag links between groups, pull them back out to the top level, or move a whole group as one block.
+- **Custom card gradients** — give any link its own gradient, set a default for a whole group, or colour every card at once. Pick from 12 presets or choose your own two colours; text colour adjusts automatically for contrast.
 - **Show / hide toggle** — switch any block on or off instantly.
 - **Social icon row** — Instagram, X, YouTube, GitHub, LinkedIn and more as round icons under your bio.
 - **Smart icons** — the platform icon is detected from the URL, or choose an emoji or your own image for each link.
 - **Inline players** — YouTube, Spotify and SoundCloud play right on your page.
-- **Collapsible sections** — group links under headers that visitors can fold open and closed.
 - **Scheduled links** — set a start and end time; links appear and expire on their own, with an "Ends in…" countdown for visitors.
 - **8 gradient themes** — Aurora, Sunset, Ocean, Mint, Candy, Midnight, Forest and Paper.
 - **Custom backgrounds** — your own colour, a two-colour gradient or an uploaded photo with an adjustable dark overlay. Text colour adjusts automatically for readability.
@@ -100,9 +101,9 @@ The interface adapts to the device. On a phone it feels like a native app, with 
 
 | Area | What you can do |
 | --- | --- |
-| **Create** | Add links, embeds, headers and dividers; attach icons, emoji or thumbnails; set optional schedules. |
+| **Create** | Add links, groups, embeds, headings and dividers; attach icons, emoji or thumbnails; set optional schedules. |
 | **Read** | Visit any public page at `/{username}`; see all your content live in the dashboard. |
-| **Update** | Edit titles, URLs, icons and schedules; toggle visibility; drag to reorder; restyle your profile, theme and background. |
+| **Update** | Edit titles, URLs, icons and schedules; toggle visibility; drag to reorder or regroup; restyle your profile, theme and background. |
 | **Delete** | Remove any block with a one-step confirmation. |
 | **Track** | Every page view and link click is recorded and summarised in the analytics tab. |
 | **Account** | Register, log in, reset your password and change your username. |

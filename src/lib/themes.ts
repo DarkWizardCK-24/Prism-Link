@@ -139,7 +139,7 @@ interface BgLike {
   bgOverlay?: number;
 }
 
-function luminance(hex: string) {
+export function luminance(hex: string) {
   const m = /^#?([\da-f]{6})$/i.exec(hex.trim());
   if (!m) return 0.2;
   const n = parseInt(m[1], 16);
@@ -188,4 +188,25 @@ export function resolveTheme(p: BgLike): { theme: Theme; overlay: number; hasIma
     };
   }
   return { theme: base, overlay: 0, hasImage: false };
+}
+
+export const HEX_RE = /^#[0-9a-f]{6}$/i;
+
+/**
+ * Card style with an optional custom gradient. A custom colour overrides the theme's button style
+ * (it becomes a filled card) and picks black/white text for contrast.
+ */
+export function linkCss(theme: Theme, style: ButtonStyle, shape: ButtonShape, from?: string, to?: string): CSSProperties {
+  if (from && HEX_RE.test(from)) {
+    const end = to && HEX_RE.test(to) ? to : from;
+    const lum = (luminance(from) + luminance(end)) / 2;
+    return {
+      borderRadius: radiusFor(shape),
+      background: end === from ? from : `linear-gradient(90deg, ${from}, ${end})`,
+      color: lum > 0.5 ? "#18181b" : "#ffffff",
+      boxShadow: "0 10px 26px -12px rgba(0,0,0,.55)",
+      border: "none",
+    };
+  }
+  return buttonCss(theme, style, shape);
 }

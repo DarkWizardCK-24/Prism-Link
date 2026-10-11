@@ -8,6 +8,7 @@ import { fromLocalInput, toLocalInput } from "@/lib/time";
 import type { IconKind, ItemKind } from "@/lib/types";
 import { uploadImage } from "@/lib/upload";
 import { cn, normalizeUrl } from "@/lib/utils";
+import GradientPicker from "../ui/GradientPicker";
 
 export interface Fields {
   title: string;
@@ -18,6 +19,8 @@ export interface Fields {
   startAt: number | null;
   endAt: number | null;
   collapsible: boolean;
+  gradFrom: string;
+  gradTo: string;
 }
 
 export const EMPTY_FIELDS: Fields = {
@@ -29,6 +32,8 @@ export const EMPTY_FIELDS: Fields = {
   startAt: null,
   endAt: null,
   collapsible: false,
+  gradFrom: "",
+  gradTo: "",
 };
 
 export const inputCls =
@@ -42,6 +47,7 @@ const firstGrapheme = (v: string) => [...new Intl.Segmenter().segment(v)][0]?.se
 export function validateFields(kind: ItemKind, f: Fields): string | null {
   if (kind === "divider") return null;
   if (!f.title.trim() && kind !== "embed") return "Please enter a title.";
+  if (f.gradFrom && !/^#[0-9a-f]{6}$/i.test(f.gradFrom)) return "Pick a valid card colour.";
   if (kind === "link" && !normalizeUrl(f.url)) return "Enter a valid URL.";
   if (kind === "embed" && !parseEmbed(f.url)) return "Paste a YouTube, Spotify or SoundCloud link.";
   if (f.startAt && f.endAt && f.endAt <= f.startAt) return "The end time must be after the start time.";
@@ -155,14 +161,21 @@ function ScheduleFields({ value, onChange }: { value: Fields; onChange: (p: Part
 
 export default function ItemForm({ uid, kind, value, onChange }: { uid: string; kind: ItemKind; value: Fields; onChange: (p: Partial<Fields>) => void }) {
   if (kind === "divider") {
-    return <p className="rounded-2xl bg-zinc-50 p-3 text-sm text-zinc-500">A subtle line that separates groups of links.</p>;
+    return <p className="rounded-2xl bg-zinc-50 p-3 text-sm text-zinc-500">A subtle line that separates parts of your page.</p>;
   }
+
+  const placeholders: Record<string, string> = {
+    group: "Group name — e.g. Latest work",
+    header: "Heading — e.g. Find me online",
+    embed: "Title (optional)",
+    link: "Title — e.g. My Portfolio",
+  };
 
   return (
     <div className="space-y-2.5">
-      <input className={inputCls} placeholder={kind === "header" ? "Section title — e.g. Latest work" : kind === "embed" ? "Title (optional)" : "Title — e.g. My Portfolio"} value={value.title} maxLength={80} onChange={(e) => onChange({ title: e.target.value })} />
+      <input className={inputCls} placeholder={placeholders[kind]} value={value.title} maxLength={80} onChange={(e) => onChange({ title: e.target.value })} />
 
-      {kind !== "header" && (
+      {(kind === "link" || kind === "embed") && (
         <input
           className={inputCls}
           placeholder={kind === "embed" ? "YouTube, Spotify or SoundCloud URL" : "URL — e.g. instagram.com/you"}
@@ -172,14 +185,23 @@ export default function ItemForm({ uid, kind, value, onChange }: { uid: string; 
         />
       )}
 
-      {kind === "header" && (
+      {kind === "group" && (
         <label className="flex cursor-pointer items-center gap-3 rounded-2xl bg-zinc-50 p-3 text-sm font-semibold text-zinc-700">
           <input type="checkbox" className="h-4 w-4 accent-violet-600" checked={value.collapsible} onChange={(e) => onChange({ collapsible: e.target.checked })} />
-          Collapsible — visitors can fold the links below this header
+          Collapsible — visitors can fold this group open and closed
         </label>
       )}
 
       {kind === "link" && <IconPicker uid={uid} value={value} onChange={onChange} />}
+      {(kind === "link" || kind === "group") && (
+        <GradientPicker
+          from={value.gradFrom}
+          to={value.gradTo}
+          onChange={(gradFrom, gradTo) => onChange({ gradFrom, gradTo })}
+          label={kind === "group" ? "Card colour for links in this group" : "Card colour"}
+          hint={kind === "group" ? "Links in the group use this unless they have their own colour." : undefined}
+        />
+      )}
       <ScheduleFields value={value} onChange={onChange} />
     </div>
   );
