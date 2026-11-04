@@ -38,7 +38,7 @@ export async function uploadImage(_uid: string, file: File, kind: keyof typeof I
 
   if (blob.size > preset.inlineLimit) {
     const smaller = await compress(file, Math.round(preset.maxDim * 0.6), 0.6);
-    if (smaller.size > preset.inlineLimit) throw new Error("Image is too detailed to store — try a smaller one.");
+    if (smaller.size > preset.inlineLimit) throw new Error("Image is too detailed to store. Try a smaller one.");
     return toDataUrl(smaller);
   }
   return toDataUrl(blob);

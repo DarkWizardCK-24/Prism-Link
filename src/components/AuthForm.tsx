@@ -63,7 +63,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         toast.success("Welcome to PrismLink!");
       } else {
         await resetPassword(email.trim());
-        toast.success("Reset link sent — check your inbox.");
+        toast.success("Reset link sent. Check your inbox.");
       }
     } catch (err) {
       setError(authErrorMessage(err));
@@ -76,7 +76,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
-      {/* Brand panel — desktop only */}
+      {/* Brand panel, desktop only */}
       <div className="relative hidden overflow-hidden bg-[#120d2b] lg:flex lg:flex-col lg:items-center lg:justify-center">
         <div className="animate-blob absolute -left-20 top-10 h-96 w-96 rounded-full bg-violet-600/40 blur-3xl" />
         <div className="animate-blob absolute -right-10 bottom-0 h-96 w-96 rounded-full bg-pink-500/40 blur-3xl [animation-delay:-8s]" />

@@ -202,7 +202,7 @@ export default function AnalyticsPanel({ profile, links }: { profile: Profile; l
           <TrendChart days={data.days} views={data.views} clicks={data.clicks} />
         )}
         {events !== null && data.totalViews + data.totalClicks === 0 && (
-          <p className="mt-2 text-center text-xs font-medium text-zinc-400">No activity in this period yet — share your link to get started.</p>
+          <p className="mt-2 text-center text-xs font-medium text-zinc-400">No activity in this period yet. Share your link to get started.</p>
         )}
       </Card>
 

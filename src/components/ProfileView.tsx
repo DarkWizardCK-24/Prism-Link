@@ -263,7 +263,7 @@ export default function ProfileView({
           </AnimatePresence>
           {realCount === 0 && (
             <li className="rounded-2xl border border-dashed px-4 py-8 text-center text-sm" style={{ borderColor: theme.line, color: theme.subtext }}>
-              No links yet — add your first one!
+              No links yet. Add your first one!
             </li>
           )}
         </ul>

@@ -499,7 +499,6 @@ export default function LinksPanel({
     }
   }
 
-  /* ----- drag & drop ----- */
 
   function onDragStart({ active }: DragStartEvent) {
     setActiveId(String(active.id));

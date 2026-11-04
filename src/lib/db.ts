@@ -39,7 +39,6 @@ export async function isUsernameAvailable(username: string) {
   return !snap.exists();
 }
 
-/* ---------- Account / profile ---------- */
 
 export async function createAccount(input: {
   email: string;
@@ -122,7 +121,6 @@ export async function changeUsername(uid: string, oldName: string, newName: stri
   });
 }
 
-/* ---------- Links CRUD (links, headers, dividers, embeds) ---------- */
 
 export function subscribeLinks(uid: string, cb: (l: LinkItem[]) => void): Unsubscribe {
   return onSnapshot(query(linksCol(uid), orderBy("order")), (snap) =>
@@ -175,7 +173,6 @@ export async function deleteGroup(uid: string, group: LinkItem, children: LinkIt
   await batch.commit();
 }
 
-/* ---------- Public page ---------- */
 
 export async function getPublicPage(username: string): Promise<{ profile: Profile; links: LinkItem[] } | null> {
   const nameSnap = await getDoc(doc(db, "usernames", username.toLowerCase()));
@@ -190,7 +187,6 @@ export async function getPublicPage(username: string): Promise<{ profile: Profil
   };
 }
 
-/* ---------- Tracking & analytics ---------- */
 
 async function logEvent(uid: string, type: "view" | "click", linkId?: string) {
   try {

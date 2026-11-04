@@ -42,3 +42,7 @@ next-env.d.ts
 
 # keep the sample env file in the repo
 !.env.local.example
+
+# agent rules
+AGENTS.md
+CLAUDE.md

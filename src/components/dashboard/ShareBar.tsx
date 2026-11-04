@@ -17,7 +17,7 @@ export default function ShareBar({ username }: { username: string }) {
       await navigator.clipboard.writeText(url);
       toast.success("Link copied!");
     } catch {
-      toast.error("Couldn't copy — select it manually.");
+      toast.error("Couldn't copy. Select it manually.");
     }
   }
 

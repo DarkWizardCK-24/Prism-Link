@@ -27,16 +27,16 @@ const DEMO_LINKS = [
 ];
 
 const FEATURES = [
-  { Icon: LuPalette, title: "Gorgeous themes", text: "Eight hand-tuned gradient themes with glass, solid and outline buttons.", tint: "from-violet-500 to-fuchsia-500" },
-  { Icon: LuGripVertical, title: "Drag & drop", text: "Reorder links with a flick. Toggle any link on or off instantly.", tint: "from-pink-500 to-orange-400" },
-  { Icon: LuChartColumn, title: "Live analytics", text: "See page views, clicks and your top performing links in real time.", tint: "from-sky-500 to-indigo-500" },
+  { Icon: LuPalette, title: "Themes", text: "Eight gradient themes with glass, solid and outline buttons.", tint: "from-violet-500 to-fuchsia-500" },
+  { Icon: LuGripVertical, title: "Drag & drop", text: "Reorder links by dragging. Switch any link on or off.", tint: "from-pink-500 to-orange-400" },
+  { Icon: LuChartColumn, title: "Live analytics", text: "See page views, clicks and your top links.", tint: "from-sky-500 to-indigo-500" },
   { Icon: LuQrCode, title: "Share anywhere", text: "One short URL plus an instant QR code for print and events.", tint: "from-emerald-500 to-teal-500" },
-  { Icon: LuSmartphone, title: "App-like on mobile", text: "Built mobile-first with a native feel — and a full studio on desktop.", tint: "from-amber-500 to-rose-500" },
-  { Icon: LuZap, title: "Blazing fast", text: "Powered by Next.js and Firebase so your page loads in a blink.", tint: "from-fuchsia-500 to-purple-600" },
+  { Icon: LuSmartphone, title: "App-like on mobile", text: "Built mobile-first, with a full editor and live preview on desktop.", tint: "from-amber-500 to-rose-500" },
+  { Icon: LuZap, title: "Fast pages", text: "Built on Next.js and Firebase, so public pages load quickly.", tint: "from-fuchsia-500 to-purple-600" },
 ];
 
 const STEPS = [
-  { n: "01", title: "Claim your link", text: "Sign up and pick a username — prismlink.app/you." },
+  { n: "01", title: "Claim your link", text: "Sign up and pick a username, like prismlink.app/you." },
   { n: "02", title: "Add & style", text: "Drop in your links, choose a theme and watch the preview update live." },
   { n: "03", title: "Share everywhere", text: "Put it in your bio, your videos, your business card." },
 ];
@@ -78,8 +78,8 @@ export default function Home() {
             <span className="text-gradient animate-shimmer">Every side of you.</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-600 lg:mx-0">
-            PrismLink splits your online world into a single, beautiful page. Share your socials, music, store and
-            more — styled your way in minutes.
+            PrismLink puts your socials, music, store and projects on one page.
+            Style it your way in minutes.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="mt-9 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
             <Link href={user ? "/dashboard" : "/signup"} className="w-full sm:w-auto">
@@ -101,7 +101,7 @@ export default function Home() {
           <div className="animate-blob absolute -right-6 bottom-0 h-64 w-64 rounded-full bg-pink-400/40 blur-3xl [animation-delay:-7s]" />
           <motion.div initial={{ opacity: 0, y: 40, rotate: 3 }} animate={{ opacity: 1, y: 0, rotate: 0 }} transition={{ delay: 0.2, type: "spring", stiffness: 120, damping: 16 }} className="animate-float relative">
             <PhonePreview
-              profile={{ username: "mia", displayName: "Mia Rivera", bio: "Creator · Designer · Dreamer ✨", avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=Mia&backgroundType=gradientLinear&backgroundColor=ffd5dc", theme: "aurora", buttonStyle: "glass", buttonShape: "pill" }}
+              profile={{ username: "mia", displayName: "Mia Rivera", bio: "Creator · Designer", avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=Mia&backgroundType=gradientLinear&backgroundColor=ffd5dc", theme: "aurora", buttonStyle: "glass", buttonShape: "pill" }}
               links={DEMO_LINKS}
             />
           </motion.div>

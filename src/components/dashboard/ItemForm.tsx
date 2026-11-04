@@ -165,10 +165,10 @@ export default function ItemForm({ uid, kind, value, onChange }: { uid: string; 
   }
 
   const placeholders: Record<string, string> = {
-    group: "Group name — e.g. Latest work",
-    header: "Heading — e.g. Find me online",
+    group: "Group name, e.g. Latest work",
+    header: "Heading, e.g. Find me online",
     embed: "Title (optional)",
-    link: "Title — e.g. My Portfolio",
+    link: "Title, e.g. My Portfolio",
   };
 
   return (
@@ -178,7 +178,7 @@ export default function ItemForm({ uid, kind, value, onChange }: { uid: string; 
       {(kind === "link" || kind === "embed") && (
         <input
           className={inputCls}
-          placeholder={kind === "embed" ? "YouTube, Spotify or SoundCloud URL" : "URL — e.g. instagram.com/you"}
+          placeholder={kind === "embed" ? "YouTube, Spotify or SoundCloud URL" : "URL, e.g. instagram.com/you"}
           value={value.url}
           inputMode="url"
           onChange={(e) => onChange({ url: e.target.value })}
@@ -188,7 +188,7 @@ export default function ItemForm({ uid, kind, value, onChange }: { uid: string; 
       {kind === "group" && (
         <label className="flex cursor-pointer items-center gap-3 rounded-2xl bg-zinc-50 p-3 text-sm font-semibold text-zinc-700">
           <input type="checkbox" className="h-4 w-4 accent-violet-600" checked={value.collapsible} onChange={(e) => onChange({ collapsible: e.target.checked })} />
-          Collapsible — visitors can fold this group open and closed
+          Collapsible: visitors can fold this group open and closed
         </label>
       )}
 

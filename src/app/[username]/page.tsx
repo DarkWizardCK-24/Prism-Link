@@ -65,7 +65,7 @@ export default function PublicProfilePage() {
         <p className="text-gradient font-display text-7xl font-extrabold">404</p>
         <h1 className="font-display text-2xl font-bold">This page doesn&apos;t exist (yet)</h1>
         <p className="max-w-sm text-zinc-500">
-          <span className="font-bold text-zinc-700">@{username}</span> is available — claim it before someone else does.
+          <span className="font-bold text-zinc-700">@{username}</span> is available. Claim it before someone else does.
         </p>
         <Link href="/signup">
           <Button size="lg">Claim this username</Button>

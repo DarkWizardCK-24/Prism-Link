@@ -17,7 +17,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "PrismLink — One link. Every side of you.",
+  title: "PrismLink | One link. Every side of you.",
   description:
     "PrismLink turns a single link into a beautiful, colourful home for everything you share. Build your page in minutes.",
 };
