@@ -6,6 +6,8 @@
 
 **One link. Every side of you.**
 
+[![CI](https://github.com/DarkWizardCK-24/Prism-Link/actions/workflows/ci.yml/badge.svg)](https://github.com/DarkWizardCK-24/Prism-Link/actions/workflows/ci.yml) [![Live demo](https://img.shields.io/badge/Live-demo-2ea44f?logo=vercel&logoColor=white)](https://prism-link.vercel.app) ![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white) ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black) ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=white)
+
 A link-in-bio app. Put your socials, music, videos and projects on one page, style it, and share it with one short URL.
 
 </div>
